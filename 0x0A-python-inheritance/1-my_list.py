@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+'''
+inheritamne
+'''
 
 class MyList(list):
     
