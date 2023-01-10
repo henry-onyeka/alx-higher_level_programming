@@ -3,6 +3,7 @@
 inheritance
 '''
 
+
 class BaseGeometry:
     """ Empty class """
     pass
