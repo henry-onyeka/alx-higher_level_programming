@@ -2,7 +2,7 @@
 """Lookup
 """
 def lookup(obj):
-   '''
+    '''
 the function returns the properties and methods without values
  Args:
         obj: instance of the class
