@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-
+"""Lookup
+"""
 def lookup(obj):
    '''
 the function returns the properties and methods without values
