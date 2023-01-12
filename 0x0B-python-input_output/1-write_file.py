@@ -2,16 +2,10 @@
 """number_of_lines
 """
 
-
-def number_of_lines(filename=""):
+def write_file(filename="", text=""):
     """Takes in str filename to read the number of lines
     """
 
-    with open(filename, encoding="utf-8") as readFile:
-        lines = 0
-        while True:
-            line = readFile.readline()
-            if not line:
-                break
-            lines += 1
+    with open(filename, encoding="utf-8") as rea:
+           line = texts.write(text)
         return len(line)
