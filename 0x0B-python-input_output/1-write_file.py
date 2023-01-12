@@ -14,5 +14,5 @@ def number_of_lines(filename=""):
     xters = 0
     with open('filename', 'r', encoding = "utf-8") as something:
         for line in something:
-        xters += 1
+            xters += 1
     return xters
