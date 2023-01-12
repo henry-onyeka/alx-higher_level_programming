@@ -12,9 +12,7 @@ def read_lines(filename="", nb_lines=0):
         Exception: when the file can be opened
     """
      
-        n_lines = 0
     with open(filename, 'r', encoding="utf-8") as f:
         for line in f:
-            
             n_lines = len(line.readline())
     return n_lines
