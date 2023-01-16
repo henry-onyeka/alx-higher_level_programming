@@ -1,124 +1,116 @@
 #!/usr/bin/python3
-"""Unittest for class Rectangle
+"""rectangle
 """
-import unittest
-import os
-from io import StringIO
-from unittest.mock import patch
 from models.base import Base
-from models.rectangle import Rectangle
-from models.square import Square
 
 
-class TestRectangle(unittest.TestCase):
-    """Testing Rectangle
+class Rectangle(Base):
+    """Inherits from Base
     """
 
-    def tearDown(self):
-        """Tears down obj count
+    def __init__(self, width, height, x=0, y=0, id=None):
+        super().__init__(id)
+        self.width = width
+        self.height = height
+        self.x = x
+        self.y = y
+
+    @property
+    def width(self):
+        return self.__width
+
+    @width.setter
+    def width(self, value):
+        if type(value) != int:
+            raise TypeError("width must be an integer")
+        if value <= 0:
+            raise ValueError("width must be > 0")
+        self.__width = value
+
+    @property
+    def height(self):
+        return self.__height
+
+    @height.setter
+    def height(self, value):
+        if type(value) != int:
+            raise TypeError("height must be an integer")
+        if value <= 0:
+            raise ValueError("height must be > 0")
+        self.__height = value
+
+    @property
+    def x(self):
+        return self.__x
+
+    @x.setter
+    def x(self, value):
+        if type(value) != int:
+            raise TypeError("x must be an integer")
+        if value < 0:
+            raise ValueError("x must be >= 0")
+        self.__x = value
+
+    @property
+    def y(self):
+        return self.__y
+
+    @y.setter
+    def y(self, value):
+        if type(value) != int:
+            raise TypeError("y must be an integer")
+        if value < 0:
+            raise ValueError("y must be >= 0")
+        self.__y = value
+
+    def area(self):
+        """Returns area of the rectangle
         """
 
-        Base._Base__nb_objects = 0
-        self.assertEqual(Base._Base__nb_objects, 0)
+        return self.__width * self.__height
 
-    def test_instance(self):
-        """Test instantiation
+    def display(self):
+        """Returns printed rectangle with '#'
+        y is newline, x is space
         """
 
-        o1 = Rectangle(3, 2)
-        o2 = Rectangle(8, 7, 0, 0, 12)
-        with self.assertRaises(TypeError):
-            o3 = Rectangle("string")
-            o4 = Rectangle(None)
-            o5 = Rectangle(float('inf'))
-            o6 = Rectangle(9.5, 9.3)
-            o7 = Rectangle(-8, 9)
-            o8 = Rectangle()
+        if self.__y != 0:
+            for newline in range(self.__y):
+                print()
 
-        self.assertEqual(o1.id, 1)
-        self.assertEqual(o1._Base__nb_objects, 1)
-        self.assertEqual(o2.id, 12)
-        self.assertEqual(o2._Base__nb_objects, 1)
+        for row in range(self.__height):
+            print((self.__x * " ") + (self.__width * '#'))
 
-    def test_area(self):
-        """Testing area()
+    def __str__(self):
+        """Returns formatted information display
         """
 
-        o1 = Rectangle(3, 2)
-        o2 = Rectangle(8, 7, 0, 0, 12)
-        o3 = Rectangle(999, 999)
+        return "[{}] ({}) {}/{} - {}/{}".format(self.__class__.__name__,
+                                                self.id, self.__x, self.__y,
+                                                self.__width, self.__height)
 
-        self.assertEqual(o1.area(), 6)
-        self.assertEqual(o2.area(), 56)
-        self.assertEqual(o3.area(), 998001)
-
-    def test_display(self):
-        """Testing display()
+    def update(self, *args, **kwargs):
+        """Updates rectangle values
         """
 
-        o1 = Rectangle(3, 2)
-        with patch('sys.stdout', new=StringIO()) as fakeOutput:
-            o1.display()
-            self.assertEqual(fakeOutput.getvalue(), '###\n###\n')
+        if len(kwargs) != 0:
+            for k, v in kwargs.items():
+                setattr(self, k, v)
+        elif len(args) != 0:
+            try:
+                self.id = args[0]
+                self.__width = args[1]
+                self.__height = args[2]
+                self.__x = args[3]
+                self.__y = args[4]
+            except IndexError:
+                pass
+        else:
+            print()
 
-        o2 = Rectangle(4, 5, 0, 1, 12)
-        with patch('sys.stdout', new=StringIO()) as fakeOutput:
-            o2.display()
-            self.assertEqual(fakeOutput.getvalue(),
-                             '\n####\n####\n####\n####\n####\n')
-
-    def test_str(self):
-        """Testing __str__()
+    def to_dictionary(self):
+        """Returns dict representation
         """
 
-        o1 = Rectangle(3, 2)
-        o2 = Rectangle(8, 7, 0, 0, 12)
-        o3 = Rectangle(3, 2, 1)
-        o4 = Rectangle(3, 2, id="holberton")
-
-        self.assertEqual(o1.__str__(), '[Rectangle] (1) 0/0 - 3/2')
-        self.assertEqual(o2.__str__(), '[Rectangle] (12) 0/0 - 8/7')
-        self.assertEqual(o3.__str__(), '[Rectangle] (2) 1/0 - 3/2')
-        self.assertEqual(o4.__str__(), '[Rectangle] (holberton) 0/0 - 3/2')
-
-    def test_update(self):
-        """Testing update()
-        """
-
-        o1 = Rectangle(3, 2)
-        o2 = Rectangle(8, 7, 0, 0, 12)
-        o3 = Rectangle(3, 2, 1)
-        o4 = Rectangle(3, 2, id="holberton")
-        o5 = Rectangle(3, 2, id="holberton")
-
-        o1.update(5, 7)
-        self.assertEqual(o1.__str__(), '[Rectangle] (5) 0/0 - 7/2')
-        with self.assertRaises(ValueError):
-            o2.update(**{'id': 1337, 'x': -1})
-            o3.update("stringid", None, None)
-        o4.update(None)
-        self.assertEqual(o4.__str__(), '[Rectangle] (None) 0/0 - 3/2')
-        o5.update(-5)
-        self.assertEqual(o5.__str__(), '[Rectangle] (-5) 0/0 - 3/2')
-
-    def test_to_dictionary(self):
-        """Testing to_dictionary()
-        """
-
-        o1 = Rectangle(3, 2)
-        o2 = Rectangle(8, 7, 0, 0, 12)
-        o3 = Rectangle(3, 2, 1)
-        o4 = Rectangle(3, 2, id="holberton")
-
-        d1 = {'id': 1, 'width': 3, 'height': 2, 'x': 0, 'y': 0}
-        d2 = {'id': 12, 'width': 8, 'height': 7, 'x': 0, 'y': 0}
-        d3 = {'id': 2, 'width': 3, 'height': 2, 'x': 1, 'y': 0}
-        d4 = {'id': 'holberton', 'width': 3, 'height': 2, 'x': 0, 'y': 0}
-
-        self.assertDictEqual(o1.to_dictionary(), d1)
-        self.assertDictEqual(o2.to_dictionary(), d2)
-        self.assertDictEqual(o3.to_dictionary(), d3)
-        self.assertDictEqual(o4.to_dictionary(), d4)
-
-if __name__ == '__main__':
-    unittest.main()
+        return {'x': self.__x, 'y': self.__y, 'id': self.id,
+                'height': self.__height, 'width': self.__width}
