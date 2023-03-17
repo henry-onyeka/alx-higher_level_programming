@@ -1,7 +1,5 @@
 #!/usr/bin/node
-const word = ['C is fun', 'Python is cool', 'Javascript is amazing'];
-let o = 0;
-while (o < 3) {
-  console.log(word[o]);
-  o++;
+const msg = ['C is fun', 'Python is cool', 'Javascript is amazing'];
+for (let i = 0; i < 3; i++) {
+  console.log(msg[i]);
 }
