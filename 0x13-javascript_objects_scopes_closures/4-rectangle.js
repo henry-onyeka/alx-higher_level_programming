@@ -6,11 +6,16 @@ module.exports = class Rectangle {
       this.height = h;
     }
   }
+
   print () {
-    let sizeY = this.height;
-    while (sizeY > 0) {
-      console.log('X'.repeat(this.width));
-      sizeY -= 1;
+    let i = 0;
+    let p = 0;
+    for (i = 0; i < this.height; i++) {
+      let ph = '';
+      for (p = 0; p < this.width; p++) {
+        ph += 'X';
+      }
+      console.log(ph);
     }
   }
 
@@ -21,7 +26,7 @@ module.exports = class Rectangle {
   }
 
   double () {
-    this.width *= 2;
-    this.height * 2;
+    [this.width, this.height] = [this.width, this.height]
+      .map(prop => prop * 2);
   }
 };
